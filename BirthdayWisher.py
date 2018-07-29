@@ -1,10 +1,5 @@
-'''
-Project Title: Facebook Birthday Wisher
-Developer: AdityaThakker (Github UserName: @adityathakker) 
-Website: http://www.adityathakker.com
-Github Repo: https://github.com/adityathakker/Facebook-Birthday-Wisher
-'''
 
+import html.parser
 import json
 import os
 import pickle
@@ -38,8 +33,11 @@ list_of_user_agents = [
 
 
 class BirthdayWisher(object):
-    def __init__(self, email, password):
+    def __init__(self, email: object, password: object) -> object:
+        """
 
+        :rtype: object
+        """
         if not (email and password):
             raise Exception("Email And Password Are Both Needed")
 
@@ -123,7 +121,7 @@ class BirthdayWisher(object):
         if not (self.email and self.password):
             raise Exception("Email And Password Are Both Required")
 
-        soup = BeautifulSoup(self.__get(fb_mobile_url).text, "lxml")
+        soup = BeautifulSoup(self.__get(fb_mobile_url).text, "html.parser")
         data = dict((elem['name'], elem['value']) for elem in soup.findAll("input") if
                     elem.has_attr('value') and elem.has_attr('name'))
         data['email'] = self.email
@@ -142,7 +140,7 @@ class BirthdayWisher(object):
             self.ttstamp = ''
 
             response = self.__get(fb_url)
-            soup = BeautifulSoup(response.text, "lxml")
+            soup = BeautifulSoup(response.text, "html.parser")
             self.fb_dtsg = soup.find("input", {'name': 'fb_dtsg'})['value']
             self._set_ttstamp()
 
@@ -235,7 +233,7 @@ class BirthdayWisher(object):
 
     def __extract_birthday_ids(self):
         response = self.__get(birthday_url)
-        soup = BeautifulSoup(response.text, "lxml")
+        soup = BeautifulSoup(response.text, "html.parser")
 
         codes = soup.findAll("code")
         code = str()
@@ -245,13 +243,13 @@ class BirthdayWisher(object):
                 break
 
         if isinstance(code, str):
-        	return list()
+            return list()
         
         comments = code.findAll(text=lambda text: isinstance(text, Comment))
         birthday_div = comments[0]
 
         try:
-            soup = BeautifulSoup(birthday_div, "lxml")
+            soup = BeautifulSoup(birthday_div, "html.parser")
             ul_element = soup.find("ul", {"class": "_3ng0"})
             all_birthdays_div = ul_element.findAll("div", {"class": "clearfix _3ng1"})
 
